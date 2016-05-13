@@ -25,12 +25,12 @@
    "trillion" 1e12
    "tn" 1e12})
 
-(def app-state (atom {:xr 1175.25
-                      :krw nil
-                      :usd nil}))
+(defonce app-state (atom {:xr 1175.25
+                          :krw "4천만"
+                          :usd 34035.312}))
 
-(defn forex-display []
-  [:p "The current FOREX rate for USD and KRW is: "
+(defn xr-display []
+  [:pre "The current FOREX rate for USD and KRW is: "
    [:b (:xr @app-state)]])
 
 (defn parse-number
@@ -62,8 +62,9 @@
   [:form {:on-submit #(.preventDefault %)}
    [:input {:type "text"
             :value (from @app-state)
-            :on-change #(convert (-> % .-target .-value)
-                                 from to)}]
+            :on-change #(convert (-> % .-target .-value) from to)
+            :style {:height "2em"
+                    :font-size "1em"}}]
    (if (= from :krw)
      " 원"
      " dollars")])
@@ -78,8 +79,11 @@
 
 (defn home []
   [:div
-   [forex-display]
+   [:h2 "cwonversion"]
+   [:p "Type in the amount for the currency you wish to convert. Natural
+   language, such as '100만', '천억', or '10 thousand' is ok." ]
    [converter-container]
+   [xr-display]
    ;; [app-state-display]
    ])
 
