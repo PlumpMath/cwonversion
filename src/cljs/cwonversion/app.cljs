@@ -16,10 +16,16 @@
 
 (def us-number-units
   {"hundred" 100
+   "hund" 100
    "thousand" 1e3
+   "thou" 1e3
+   "thous" 1e3
    "million" 1e6
+   "mn" 1e6
    "billion" 1e9
-   "trillion" 1e12})
+   "bn" 1e9
+   "trillion" 1e12
+   "tn" 1e12})
 
 (def app-state (atom {:usd->krw 1175.25
                       :krw->usd (/ 1 1175.25)
