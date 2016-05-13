@@ -27,14 +27,13 @@
    "trillion" 1e12
    "tn" 1e12})
 
-(def app-state (atom {:usd->krw 1175.25
-                      :krw->usd (/ 1 1175.25)
+(def app-state (atom {:xr 1175.25
                       :krw nil
                       :usd nil}))
 
 (defn forex-display []
   [:p "The current FOREX rate for USD and KRW is: "
-   [:b (:usd->krw @app-state)]])
+   [:b (:xr @app-state)]])
 
 (defn parse-number
   "Takes a Korean number string, such as '100만', and parses it as an integer."
@@ -55,8 +54,8 @@
 
 (defn convert [input-str from to]
   (let [xr (case from
-             :krw (:krw->usd @app-state)
-             :usd (:usd->krw @app-state))]
+             :krw (/ 1 (:xr @app-state))
+             :usd (:xr @app-state))]
     (swap! app-state assoc from input-str)
     (swap! app-state assoc to (.toLocaleString
                                (* xr (parse-number from input-str))))))
