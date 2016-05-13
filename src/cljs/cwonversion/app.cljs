@@ -16,10 +16,8 @@
 
 (def us-number-units
   {"hundred" 100
-   "hund" 100
    "thousand" 1e3
-   "thou" 1e3
-   "thous" 1e3
+   "k" 1e3
    "million" 1e6
    "mn" 1e6
    "billion" 1e9
@@ -50,7 +48,7 @@
                  :usd us-number-units)]
     (if (empty? s)
       0
-      (apply * n (map parser units)))))
+      (apply * n (remove nil? (map parser units))))))
 
 (defn convert [input-str from to]
   (let [xr (case from
