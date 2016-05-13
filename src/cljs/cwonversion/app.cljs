@@ -43,8 +43,8 @@
         n (if (seq digits) digits 1)
         units (case key
                 :krw (re-find #"\D+" s)
-                :usd (-> (re-find #"\D+" s)
-                         str/trim
+                :usd (-> ((fnil str/trim "")
+                          (re-find #"\D+" s))
                          (str/split #" ")))
         parser (case key
                  :krw kr-number-units
@@ -52,10 +52,6 @@
     (if (empty? s)
       0
       (apply * n (map parser units)))))
-
-(-> (re-find #"\D+" "100 thousand million")
-    str/trim
-    (str/split #" "))
 
 (defn convert [input-str from to]
   (let [xr (case from
@@ -71,7 +67,9 @@
             :value (from @app-state)
             :on-change #(convert (-> % .-target .-value)
                                  from to)}]
-   (str/upper-case (str " " (name from)))])
+   (if (= from :krw)
+     " 원"
+     " dollars")])
 
 (defn converter-container []
   [:div
@@ -85,7 +83,8 @@
   [:div
    [forex-display]
    [converter-container]
-   [app-state-display]])
+   ;; [app-state-display]
+   ])
 
 (defn init []
   (reagent/render [home]
