@@ -39,7 +39,7 @@
 
 (deftask production []
   (task-options! cljs {:optimizations :advanced}
-                      sass   {:output-style :compressed})
+                 sass {:output-style :compressed})
   identity)
 
 (deftask development []

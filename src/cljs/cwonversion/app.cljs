@@ -32,16 +32,24 @@
 
 (defn parse-number
   "Takes a Korean number string, such as '100만', and parses it as an integer."
-  [country s]
+  [key s]
   (let [digits (re-find #"\d*[\.\d+]?\d*" s)
         n (if (seq digits) digits 1)
-        units (re-find #"\D+" s)
-        parser (case country
+        units (case key
+                :krw (re-find #"\D+" s)
+                :usd (-> (re-find #"\D+" s)
+                         str/trim
+                         (str/split #" ")))
+        parser (case key
                  :krw kr-number-units
                  :usd us-number-units)]
     (if (empty? s)
       0
       (apply * n (map parser units)))))
+
+(-> (re-find #"\D+" "100 thousand million")
+    str/trim
+    (str/split #" "))
 
 (defn convert [input-str from to]
   (let [xr (case from
