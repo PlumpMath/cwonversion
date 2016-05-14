@@ -32,7 +32,7 @@
                           :usd nil}))
 
 (defn get-xr []
-  (GET "http://api.fixer.io/latest"
+  (GET "https://api.fixer.io/latest"
        {:params {:base "USD" :symbols "KRW"}
         :handler #(swap! app-state assoc :xr
                          (get-in (reader/read-string (str %))
@@ -96,7 +96,7 @@
   [:div
    [:h2 "cwonversion"]
    [:p "Type in the amount for the currency you wish to convert. Natural
-   language, such as '100만', '천억', or '10 thousand' is ok." ]
+   language, such as '2억 5천만', '천억', or '10 thousand' is ok." ]
    [converter-container]
    [xr-display]
    ;; [app-state-display]

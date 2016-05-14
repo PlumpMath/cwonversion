@@ -18,7 +18,7 @@
          1)))
 
 (deftest test-us-num-parse []
-  (is (= (cw/parse-number :usd "1 thousand")
+  (is (= (cw/parse-num :usd "1 thousand")
          1000)))
 
 (deftest re-test []
