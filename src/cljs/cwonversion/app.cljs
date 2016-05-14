@@ -42,36 +42,42 @@
   [:pre "The current FOREX rate for USD and KRW is: "
    [:b (:xr @app-state)]])
 
-(defn parse-number
-  "Takes a Korean number string, such as '100만', and parses it as an integer."
-  [key s]
+(defn parse-num [from s]
   (let [digits (re-find #"\d*[\.\d+]?\d*" s)
         n (if (seq digits) digits 1)
-        units (case key
-                :krw (re-find #"\D+" s)
-                :usd (-> ((fnil str/trim "")
-                          (re-find #"\D+" s))
+        units (case from
+                :krw (str/replace s #"[0-9., ]" "")
+                :usd (-> (str/replace s #"[0-9., ]" "")
                          (str/split #" ")))
-        parser (case key
+        parser (case from
                  :krw kr-number-units
                  :usd us-number-units)]
     (if (empty? s)
       0
-      (apply * n (remove nil? (map parser units))))))
+      (int (apply * n (remove nil? (map parser units)))))))
 
-(defn convert [input-str from to]
+(defn parse-composite-kr-num [s]
+  (let [nums (str/split s #" ")]
+    (apply + (map (partial parse-num :krw) nums))))
+
+(defn convert [from s]
+  (case from
+    :krw (parse-composite-kr-num s)
+    :usd (parse-num :usd s)))
+
+(defn do-conversion [input-str from to]
   (let [xr (case from
              :krw (/ 1 (:xr @app-state))
              :usd (:xr @app-state))]
     (swap! app-state assoc from input-str)
     (swap! app-state assoc to (.toLocaleString
-                               (* xr (parse-number from input-str))))))
+                               (* xr (convert from input-str))))))
 
 (defn currency-input [from to]
   [:form {:on-submit #(.preventDefault %)}
    [:input {:type "text"
             :value (from @app-state)
-            :on-change #(convert (-> % .-target .-value) from to)
+            :on-change #(do-conversion (-> % .-target .-value) from to)
             :style {:height "2em"
                     :font-size "1em"}}]
    (if (= from :krw)
