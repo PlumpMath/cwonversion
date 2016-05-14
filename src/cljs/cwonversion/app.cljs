@@ -35,8 +35,8 @@
   (GET "http://api.fixer.io/latest"
        {:params {:base "USD" :symbols "KRW"}
         :handler #(swap! app-state assoc :xr
-                        (get-in (reader/read-string (str %))
-                                ["rates" "KRW"]))}))
+                         (get-in (reader/read-string (str %))
+                                 ["rates" "KRW"]))}))
 
 (defn xr-display []
   [:pre "The current FOREX rate for USD and KRW is: "
