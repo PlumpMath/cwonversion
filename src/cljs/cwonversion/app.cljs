@@ -5,29 +5,27 @@
             [clojure.string :as str]
             [cljs.reader :as reader]))
 
-(def kr-number-units
-  {"원" 1
-   "일" 1
-   "십" 10
-   "백" 100
-   "천" 1000
-   "만" 1e4
-   "억" 1e8
-   "조" 1e12})
+(def kr-number-units {"원" 1
+                      "일" 1
+                      "십" 10
+                      "백" 100
+                      "천" 1000
+                      "만" 1e4
+                      "억" 1e8
+                      "조" 1e12})
 
-(def us-number-units
-  {"hundred" 100
-   "thousand" 1e3
-   "k" 1e3
-   "million" 1e6
-   "mn" 1e6
-   "m" 1e6
-   "billion" 1e9
-   "bn" 1e9
-   "b" 1e9
-   "trillion" 1e12
-   "tn" 1e12
-   "t" 1e12})
+(def us-number-units {"hundred" 100
+                      "thousand" 1e3
+                      "k" 1e3
+                      "million" 1e6
+                      "mn" 1e6
+                      "m" 1e6
+                      "billion" 1e9
+                      "bn" 1e9
+                      "b" 1e9
+                      "trillion" 1e12
+                      "tn" 1e12
+                      "t" 1e12})
 
 (defonce app-state (atom {:xr nil
                           :krw nil
