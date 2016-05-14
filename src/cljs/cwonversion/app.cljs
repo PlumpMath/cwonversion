@@ -1,8 +1,9 @@
 (ns cwonversion.app
   (:require [reagent.core :as reagent :refer [atom]]
-            ;; [ajax.core :refer [GET]]
+            [ajax.core :refer [GET]]
             [cljs.pprint :as pp]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [cljs.reader :as reader]))
 
 (def kr-number-units
   {"원" 1
@@ -20,14 +21,24 @@
    "k" 1e3
    "million" 1e6
    "mn" 1e6
+   "m" 1e6
    "billion" 1e9
    "bn" 1e9
+   "b" 1e9
    "trillion" 1e12
-   "tn" 1e12})
+   "tn" 1e12
+   "t" 1e12})
 
-(defonce app-state (atom {:xr 1175.25
-                          :krw "4천만"
-                          :usd 34035.312}))
+(defonce app-state (atom {:xr nil
+                          :krw nil
+                          :usd nil}))
+
+(defn get-xr []
+  (GET "http://api.fixer.io/latest"
+       {:params {:base "USD" :symbols "KRW"}
+        :handler #(swap! app-state assoc :xr
+                        (get-in (reader/read-string (str %))
+                                ["rates" "KRW"]))}))
 
 (defn xr-display []
   [:pre "The current FOREX rate for USD and KRW is: "
@@ -88,5 +99,6 @@
    ])
 
 (defn init []
+  (get-xr)
   (reagent/render [home]
                   (.getElementById js/document "container")))

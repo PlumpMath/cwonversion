@@ -13,8 +13,7 @@
                  [reagent                     "0.5.0"]
                  [deraen/boot-sass            "0.2.1"          :scope "test"]
                  [org.slf4j/slf4j-nop         "1.7.13"         :scope "test"]
-                 ;; [cljs-ajax                "0.5.4"]
-                 ])
+                 [cljs-ajax                   "0.5.4"]])
 
 (require
  '[adzerk.boot-cljs            :refer [cljs]]
@@ -25,7 +24,7 @@
  '[deraen.boot-sass            :refer [sass]])
 
 (deftask build []
-  (comp (speak)
+  (comp ;; (speak)
         (cljs)
         (sass)))
 
